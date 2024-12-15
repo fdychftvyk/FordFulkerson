@@ -32,21 +32,21 @@ class Graph:
         print()
 
 
-def bfs(graph, source, sink, parent):
+def dfs(graph, source, sink, parent):
     """
-    Поиск в ширину (BFS) для нахождения увеличивающего пути.
+    Поиск в глубину (DFS) для нахождения увеличивающего пути.
     """
     visited = [False] * len(graph)  # Массив посещённых вершин
-    queue = [source]  # Очередь для BFS
+    stack = [source]  # Стек для DFS
     visited[source] = True  # Исток отмечаем как посещённый
 
-    while queue:
-        u = queue.pop(0)
+    while stack:
+        u = stack.pop()  # Берём вершину из стека
 
         for idx, val in enumerate(graph[u]):
             # Если вершина ещё не посещена и остаточная пропускная способность > 0
             if not visited[idx] and val > 0:
-                queue.append(idx)
+                stack.append(idx)  # Добавляем в стек
                 visited[idx] = True
                 parent[idx] = u
 
@@ -57,14 +57,14 @@ def bfs(graph, source, sink, parent):
 
 def ford_fulkerson(graph_obj, source, sink):
     """
-    Реализация алгоритма Форда-Фалкерсона для нахождения максимального потока.
+    Реализация алгоритма Форда-Фалкерсона для нахождения максимального потока с использованием DFS.
     """
     graph = graph_obj.get_graph()  # Получаем матрицу смежности
     parent = [-1] * len(graph)  # Массив для хранения пути
     max_flow = 0  # Инициируем максимальный поток
 
     # Пока есть увеличивающий путь из истока в сток
-    while bfs(graph, source, sink, parent):
+    while dfs(graph, source, sink, parent):
         # Находим минимальную пропускную способность вдоль пути
         path_flow = float("Inf")
         s = sink
